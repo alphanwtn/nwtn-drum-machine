@@ -3,15 +3,21 @@ import { useState, useEffect } from "react";
 import DrumLine from "./components/DrumLine";
 import SetupSection from "./components/SetupSection";
 import PlayerLeds from "./components/PlayerLeds";
+import PlayerControls from "./components/PlayerControls";
 
 function App() {
-  // pattern length est en fait le nb de patter affichées
+  // pattern length est en fait le nb de pattern affichées
   const [patternLength, setPatternLength] = useState(8);
-  const [running, setRunning] = useState(true);
+  const [running, setRunning] = useState(false);
   const [triggerColumnState, setTriggerColumnState] = useState({
     triggerMatrix: new Array(32).fill(false),
     activeTrigger: null,
   });
+  const [tempo, setTempo] = useState(120);
+
+  function tempoToMs(tempo) {
+    return 1000 / ((tempo / 60) * 4);
+  }
 
   useEffect(() => {
     // ######## TIMER
@@ -22,25 +28,21 @@ function App() {
           ...triggerColumnState.triggerMatrix,
         ];
         let tempActiveTrigger = triggerColumnState.activeTrigger;
-        if (tempActiveTrigger === null) {
-          tempActiveTrigger = 0;
-          tempTriggerColumnStateMatrix.fill(false); // redondant mais pour le style
-          tempTriggerColumnStateMatrix[0] = true;
-        } else {
-          tempActiveTrigger < patternLength - 1
-            ? (tempActiveTrigger += 1)
-            : (tempActiveTrigger = 0);
-          tempTriggerColumnStateMatrix.fill(false);
-          tempTriggerColumnStateMatrix[tempActiveTrigger] = true;
-        }
+
+        tempActiveTrigger < patternLength - 1
+          ? (tempActiveTrigger += 1)
+          : (tempActiveTrigger = 0);
+        tempTriggerColumnStateMatrix.fill(false);
+        tempTriggerColumnStateMatrix[tempActiveTrigger] = true;
+
         setTriggerColumnState({
           triggerMatrix: tempTriggerColumnStateMatrix,
           activeTrigger: tempActiveTrigger,
         });
-      }, 100);
+      }, tempoToMs(tempo));
       return () => clearTimeout(timeoutVar);
     }
-  });
+  }, [triggerColumnState]);
 
   return (
     <div>
@@ -48,6 +50,12 @@ function App() {
       <SetupSection
         patternLength={patternLength}
         setPatternLength={setPatternLength}
+        tempo={tempo}
+        setTempo={setTempo}
+      />
+      <PlayerControls
+        setRunning={setRunning}
+        setTriggerColumnState={setTriggerColumnState}
       />
       <PlayerLeds
         patternLength={patternLength}
