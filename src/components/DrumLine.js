@@ -31,7 +31,6 @@ function DrumLine(props) {
     if (lineTriggerStates[triggerColumnStateActiveTrigger]) {
       const music = new Audio(drumPath);
       music.play();
-      console.log("BOOM!");
     }
   }
 
