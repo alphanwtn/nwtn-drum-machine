@@ -1,8 +1,15 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 
 function SetupSection(props) {
-  const { patternLength, setPatternLength, tempo, setTempo } = props;
+  const {
+    patternLength,
+    setPatternLength,
+    tempo,
+    setTempo,
+    loadedSamples,
+    setLoadedSamples,
+  } = props;
 
   function handleChangePatternLength(event) {
     setPatternLength(parseInt(event.target.value));
@@ -10,6 +17,18 @@ function SetupSection(props) {
 
   function handleChangeTempo(event) {
     setTempo(parseInt(event.target.value));
+  }
+
+  function handleAddDrum() {
+    const loadedSamplesTemp = [...loadedSamples];
+    loadedSamplesTemp.push(undefined);
+    setLoadedSamples(loadedSamplesTemp);
+  }
+
+  function handleDelDrum() {
+    const loadedSamplesTemp = [...loadedSamples];
+    loadedSamplesTemp.pop();
+    setLoadedSamples(loadedSamplesTemp);
   }
 
   return (
@@ -40,6 +59,12 @@ function SetupSection(props) {
           pattern: "[0-9]*",
         }}
       />
+      <Button variant="outlined" onClick={handleAddDrum}>
+        Add drum
+      </Button>
+      <Button variant="outlined" onClick={handleDelDrum}>
+        Del drum
+      </Button>
     </div>
   );
 }

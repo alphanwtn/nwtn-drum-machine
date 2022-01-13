@@ -2,21 +2,25 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 
 function DrumTrigger(props) {
-  const { explikey, isActive, handleChangeIsActive } = props;
+  const { explikeyDrumTrigger, isActive, handleChangeIsActive } = props;
 
   if (isActive) {
     return (
       <Button
         variant="contained"
-        onClick={() => handleChangeIsActive(explikey)}
+        onClick={() => handleChangeIsActive(explikeyDrumTrigger)}
       >
-        {explikey}
+        {explikeyDrumTrigger}
       </Button>
     );
   } else {
     return (
-      <Button variant="outlined" onClick={() => handleChangeIsActive(explikey)}>
-        {explikey}
+      <Button
+        style={{ paddingRight: "0px", paddingLeft: "0px", maxWidth: "10px" }}
+        variant="outlined"
+        onClick={() => handleChangeIsActive(explikeyDrumTrigger)}
+      >
+        {explikeyDrumTrigger}
       </Button>
     );
   }

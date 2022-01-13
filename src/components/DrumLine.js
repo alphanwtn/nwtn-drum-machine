@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DrumSelector from "./DrumSelector";
 import DrumTrigger from "./DrumTrigger";
 
 function DrumLine(props) {
-  const { drumPath, patternLength, triggerColumnStateActiveTrigger } = props;
+  const {
+    explikeyDrumLine,
+    patternLength,
+    sample,
+    matrixTriggerStates,
+    setMatrixTriggerStates,
+  } = props;
 
   const [lineTriggerStates, setLineTriggerStates] = useState(
     new Array(32).fill(false)
   );
+
+  useEffect(() => {
+    // update la matrice générale quand il y a changement dans la ligne
+    let tempMatrixTriggerStates = [...matrixTriggerStates];
+    tempMatrixTriggerStates[explikeyDrumLine] = lineTriggerStates;
+    setMatrixTriggerStates(tempMatrixTriggerStates);
+  }, [lineTriggerStates]);
 
   function handleChangeIsActive(explikey) {
     let lineTriggerStatesTemp = [...lineTriggerStates];
@@ -21,24 +34,15 @@ function DrumLine(props) {
     .map((x, index) => (
       <DrumTrigger
         key={index}
-        explikey={index}
+        explikeyDrumTrigger={index}
         handleChangeIsActive={handleChangeIsActive}
         isActive={lineTriggerStates[index]}
       />
     ));
 
-  function playSequence() {
-    if (lineTriggerStates[triggerColumnStateActiveTrigger]) {
-      const music = new Audio(drumPath);
-      music.play();
-    }
-  }
-
-  playSequence();
-
   return (
     <div>
-      <DrumSelector drumPath={drumPath} />
+      <DrumSelector sample={sample} />
       {listOfDrumTriggers}
     </div>
   );
